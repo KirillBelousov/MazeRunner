@@ -23,7 +23,7 @@ public:
 	char getCellType(int X, int Y) const; // return the type of a maze cell at coordinates XY: '.' for a free space, '#' for a wall
 	// bool isTheCellAWall (int X, int Y) const
 	void setCellToWall(int X, int Y);
-	void setCellToFreeSpace(int X, int Y, bool test = 0);
+	void setCellToFreeSpace(int X, int Y, bool demo = 0);
 
 	bool isXwithinMaze(int X);
 	bool isYwithinMaze(int Y);

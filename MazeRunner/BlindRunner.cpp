@@ -81,7 +81,7 @@ int BlindRunner::initialRunnerPositionY()
 
 BlindRunner::Direction BlindRunner::initialMoveDirection()
 {
-	if (p_maze->getEntranceX()*p_maze->getEntranceY() == 0) // left or up boundary
+	if (p_maze->getEntranceX() * p_maze->getEntranceY() == 0) // left or up boundary
 		if (p_maze->getEntranceX() == 0)       // left boundary
 			return RIGHT;
 		else                      // up boundary 

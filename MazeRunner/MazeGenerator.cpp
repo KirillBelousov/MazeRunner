@@ -34,12 +34,6 @@ void MazeGenerator::run(Maze &inputMaze)
 	default:
 		break;
 	}
-
-	
-	/*gnaw(1, mazeHight / 2, 1);
-	gnaw(mazeWidth / 2, 1, -1);
-	gnaw(mazeWidth-2, mazeHight / 2, 1);
-	gnaw(mazeWidth/2, mazeHight - 2, -1); */
 	int space = 3; //magic number
 	for (int i = 2, j = 2; i < (p_maze->getWidth() - 1) || j < (p_maze->getHight() - 1); i = i + space, j = j + space)
 	{
@@ -48,27 +42,6 @@ void MazeGenerator::run(Maze &inputMaze)
 		gnaw((p_maze->getWidth() - 1) - i, p_maze->getHight() - 2, -1);
 		gnaw(p_maze->getWidth() - 2, j, 1);
 	}
-	/*for (int i = 1; i < (mazeWidth - 1); i = i + space)
-	{
-		gnaw(i, 1, -1);
-		//display();
-	}
-	for (int i = 1 + space; i < (mazeHight - 1); i = i + space)
-	{
-		gnaw(1, i, 1);
-		//display();
-	}
-	for (int i = 1; i < (mazeWidth - 1); i = i + space)
-	{
-		gnaw(i, mazeHight - 2, -1);
-		//display();
-	}
-	for (int i = 1; i < (mazeHight - 1); i = i + space)
-	{
-		gnaw(mazeWidth - 2, i, 1);
-		//display();
-	}
-	 */
 	gnaw(p_maze->getEntranceX(), p_maze->getEntranceY(), 0);
 }
 
@@ -267,39 +240,3 @@ int MazeGenerator::defineType(int counter)
 	}
 	else return 0; // if even, the unit is parallel to the first unit
 }
-
-/*void MazeGenerator::fill(int density)
-{
-	int x, y;
-	//int fX, fY;
-	int step;
-	int directionVH;
-	int direction;
-
-	for (int i = 0; i < density; i++)
-	{
-		int j = 1;
-		x = 1 + rand() % (p_maze->getWidth() - 2);
-		y = 1 + rand() % (p_maze->getHight() - 2);
-		step = defineLength();
-		directionVH = defineType(rand() % 2); // -1 or 1 for vertical, 0 for horizontal 
-		direction = defineType(1); // only -1 or 1
-		//fX = x + step * direction*(1 - abs(directionVH));
-		//fY = y + step * direction * abs(directionVH);
-		//if (fX >= 1 && fX <= (mazeWidth - 2) && fY >= 1 && fY <= (mazeHight - 2))
-		while (x > 1 && x < (p_maze->getWidth() - 2) && y > 1 && y < (p_maze->getHight() - 2) && j <= step)
-		{
-			//for (int i = 1; i <= step; i++)
-			//{
-			y += direction * abs(directionVH);
-			x += direction * (1 - abs(directionVH));
-			p_maze->setCellToFreeSpace(x, y);
-			j++;
-			//}
-		}
-		//else
-		//{
-			//i--;
-		//}
-	}
-}*/

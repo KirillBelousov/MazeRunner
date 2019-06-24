@@ -6,15 +6,6 @@
 
 Maze::Maze(MazeGenerator &generator)
 {
-	/*char sample[mazeHight][mazeWidth] = { 
-	{'#','#','#','#','#'},
-	{'#','.','.','.','#'},
-	{'.','.','#','.','#'},
-	{'#','#','#','.','#'},
-	{'#','.','.','.','.'},
-	{'#','#','#','#','#'}
-	};
-	*/
 	generator.run(*this);
 }
 
@@ -148,13 +139,13 @@ void Maze::setCellToWall(int X, int Y)
 		std::cout << "The cell coordinate is out of range!" << std::endl;
 }
 
-void Maze::setCellToFreeSpace(int X, int Y, bool test)
+void Maze::setCellToFreeSpace(int X, int Y, bool demo)
 {
 	if (isCellWithinMaze(X, Y))
 		map[Y][X] = '.';
 	else
 		std::cout << "The cell coordinate is out of range!" << std::endl;
-	if (test)
+	if (demo)
 	{
 		system("cls");
 		display();
@@ -222,40 +213,4 @@ void Maze::displayVisibleArea(int positionX, int positionY, int directionOfMove)
 	}
 
 	std::cout << std::endl;
-
-	/*-1 -1	-1 0	-1 1
-	 0 -1	 0 0	 0 1
-	 1 -1	 1 0	 1 1
-	 */
-
-	/*switch (direction)
-	{
-	case 0:
-		if (posY > 0)
-		cout << map[posX - 1][posY - 1] << map[posX][posY - 1] << map[posX + 1][posY - 1] << endl;
-		cout << map[posX - 1][posY] << '^' << map[posX + 1][posY] << endl;
-		if (posY < mazeHight - 1)
-		cout << map[posX - 1][posY + 1] << map[posX][posY + 1] << map[posX + 1][posY + 1] << endl;
-		break;
-	case 1:
-		if (posX > 0)
-		cout << map[posX - 1][posY + 1] << map[posX - 1][posY] << map[posX - 1][posY - 1] << endl;
-		cout << map[posX][posY + 1] << '^' << map[posX][posY - 1] << endl;
-		if (posX < mazeWidth - 1)
-		cout << map[posX + 1][posY + 1] << map[posX + 1][posY] << map[posX + 1][posY - 1] << endl;
-		break;
-	case 2:
-		if (posY < mazeHight - 1)
-		cout << map[posX + 1][posY + 1] << map[posX][posY + 1] << map[posX - 1][posY + 1] << endl;
-		cout << map[posX + 1][posY] << '^' << map[posX - 1][posY] << endl;
-		if (posY > 0)
-		cout << map[posX + 1][posY - 1] << map[posX][posY - 1] << map[posX - 1][posY - 1] << endl;
-		break;
-	case 3:
-		if (posX < mazeWidth - 1)
-		cout << map[posX + 1][posY - 1] << map[posX + 1][posY] << map[posX + 1][posY + 1] << endl;
-		cout << map[posX][posY - 1] << '^' << map[posX][posY + 1] << endl;
-		if (posX > 0)
-		cout << map[posX - 1][posY - 1] << map[posX - 1][posY] << map[posX - 1][posY + 1] << endl;
-	}*/
 }

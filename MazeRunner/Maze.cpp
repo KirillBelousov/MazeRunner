@@ -148,8 +148,9 @@ void Maze::setCellToFreeSpace(int X, int Y, bool demo)
 	if (demo)
 	{
 		system("cls");
-		display();
-		Sleep(200);
+		std::cout << "You are gnawing passages within maze\n" << std::endl;
+		display(X, Y);
+		Sleep(500);
 	}
 }
 

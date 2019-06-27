@@ -5,9 +5,9 @@
 #include <conio.h>
 
 
-BlindRunner::BlindRunner(Maze &inputMaze)
+BlindRunner::BlindRunner(Maze *p_inputMaze)
 {
-	p_maze = &inputMaze;
+	p_maze = p_inputMaze;
 	runnerX = initialRunnerPositionX();
 	runnerY = initialRunnerPositionY();
 	moveDirection = initialMoveDirection();

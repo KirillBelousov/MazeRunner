@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-SightedRunner::SightedRunner(Maze &inputMaze) : BlindRunner(inputMaze)
+SightedRunner::SightedRunner(Maze *inputMaze) : BlindRunner(inputMaze)
 {
 }
 

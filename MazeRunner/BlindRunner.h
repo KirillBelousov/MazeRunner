@@ -7,7 +7,7 @@ class BlindRunner :
 	public Runner
 {
 public:
-	BlindRunner(Maze &);
+	BlindRunner(Maze *);
 	int getFinishStatus(); // return the status value of a successfully finished game
 	int getAbortStatus(); // return the status value of a game aborted by player
 	int getInitialStatus(); // return the initial status of a move

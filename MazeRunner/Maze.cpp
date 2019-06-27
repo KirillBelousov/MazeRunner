@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <windows.h>
+#include <exception>
 
 Maze::Maze(MazeGenerator &generator)
 {
@@ -31,12 +32,7 @@ void Maze::setEntranceX(int coordinate)
 		entranceX = coordinate;
 	else
 	{
-		do
-		{
-			std::cout << "Entrance X coordinate is out of rage. Set it manually in the range from 0 to " << mazeWidth - 1 << ": ";
-			std::cin >> entranceX;
-		}
-		while (!isXwithinMaze(entranceX));
+		throw std::runtime_error("Error! Entrance X coordinate is out of maze during generation.");
 	}
 }
 
@@ -50,13 +46,8 @@ void Maze::setEntranceY(int coordinate)
 	if (isYwithinMaze(coordinate))
 		entranceY = coordinate;
 	else
-	{	
-		do
-		{
-			std::cout << "Entrance Y coordinate is out of rage. Set it manually in the range from 0 to " << mazeHight - 1 << ": ";
-			std::cin >> entranceY;
-		}
-		while (!isYwithinMaze(entranceY));
+	{
+		throw std::runtime_error("Error! Entrance Y coordinate is out of maze during generation.");
 	}
 }
 
@@ -71,12 +62,7 @@ void Maze::setExitX(int coordinate)
 		exitX = coordinate;
 	else
 	{
-		do
-		{
-			std::cout << "Exit X coordinate is out of rage. Set it manually in the range from 0 to " << mazeWidth - 1 << ": ";
-			std::cin >> exitX;
-		}
-		while (!isXwithinMaze(exitX));
+		throw std::runtime_error("Error! Exit X coordinate is out of maze during generation.");
 	}
 }
 
@@ -91,12 +77,7 @@ void Maze::setExitY(int coordinate)
 		exitY = coordinate;
 	else
 	{
-		do
-		{
-			std::cout << "Exit Y coordinate is out of rage. Set it manually in the range from 0 to " << mazeHight - 1 << ": ";
-			std::cin >> exitY;
-		}
-		while (!isYwithinMaze(exitY));
+		throw std::runtime_error("Error! Exit Y coordinate is out of maze during generation");
 	}
 }
 

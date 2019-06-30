@@ -17,6 +17,6 @@ void SightedRunner::displayMoveResult(int const & moveResult)
 {
 	BlindRunner::displayMoveResult(moveResult);
 
-	if (moveResult != EXIT && moveResult!=ABORT) 
+	if (moveResult != STATUS_EXIT && moveResult!=STATUS_ABORT) 
 		p_maze->displayVisibleArea(runnerX, runnerY, moveDirection);
 }

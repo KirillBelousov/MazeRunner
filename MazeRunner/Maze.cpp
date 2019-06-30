@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Maze.h"
+#include "BlindRunner.h"
 #include <iostream>
 #include <cstdlib>
 #include <windows.h>
@@ -8,6 +9,8 @@
 Maze::Maze(MazeGenerator &generator)
 {
 	generator.run(*this);
+	BlindRunner testRunner(this);
+	testRunner.autorun();
 }
 
 void Maze::initialization()

@@ -10,7 +10,7 @@ Maze::Maze(MazeGenerator &generator)
 {
 	generator.run(*this);
 	BlindRunner testRunner(this);
-	testRunner.autorun();
+	testRunner.automove();
 }
 
 void Maze::initialization()
@@ -24,7 +24,7 @@ void Maze::initialization()
 	}
 }
 
-int Maze::getEntranceX()
+int Maze::getEntranceX() const
 {
 	return entranceX;
 }
@@ -39,7 +39,7 @@ void Maze::setEntranceX(int coordinate)
 	}
 }
 
-int Maze::getEntranceY()
+int Maze::getEntranceY() const
 {
 	return entranceY;
 }
@@ -54,7 +54,7 @@ void Maze::setEntranceY(int coordinate)
 	}
 }
 
-int Maze::getExitX()
+int Maze::getExitX() const
 {
 	return exitX;
 }
@@ -69,7 +69,7 @@ void Maze::setExitX(int coordinate)
 	}
 }
 
-int Maze::getExitY()
+int Maze::getExitY() const
 {
 	return exitY;
 }
@@ -113,6 +113,26 @@ int Maze::getWidth()
 char Maze::getCellType(int X, int Y) const
 {
 	return map[Y][X];
+}
+
+bool Maze::isCellAWall(int X, int Y) const
+{
+	return getCellType(X, Y) == '#';
+}
+
+bool Maze::isCellAFreeSpace(int X, int Y) const
+{
+	return getCellType(X, Y) == '.';
+}
+
+bool Maze::isCellAnEntrance(int X, int Y) const
+{
+	return X == getEntranceX() && Y == getEntranceY();
+}
+
+bool Maze::isCellAnExit(int X, int Y) const
+{
+	return X == getExitX() && Y == getExitY();
 }
 
 void Maze::setCellToWall(int X, int Y)

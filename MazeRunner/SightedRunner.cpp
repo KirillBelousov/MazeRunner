@@ -9,14 +9,16 @@ SightedRunner::SightedRunner(Maze *inputMaze) : BlindRunner(inputMaze)
 
 void SightedRunner::displayWelcomeMessage()
 {
+	if (!DEBUG)
+		system("cls");
 	std::cout << "The light picks out a small circle around you. Let's start\n" << std::endl;
 	p_maze->displayVisibleArea(runnerX, runnerY, moveDirection);
 }
 
-void SightedRunner::displayMoveResult(int const & moveResult)
+void SightedRunner::displayMoveResult()
 {
-	BlindRunner::displayMoveResult(moveResult);
+	BlindRunner::displayMoveResult();
 
-	if (moveResult != STATUS_EXIT && moveResult!=STATUS_ABORT) 
+	if (isNotEnd()) 
 		p_maze->displayVisibleArea(runnerX, runnerY, moveDirection);
 }

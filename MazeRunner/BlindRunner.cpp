@@ -12,39 +12,29 @@ BlindRunner::BlindRunner(Maze *p_inputMaze)
 	runnerX = initialRunnerPositionX();
 	runnerY = initialRunnerPositionY();
 	moveDirection = initialMoveDirection();
-}
-
-int BlindRunner::getFinishStatus()
-{
-	return STATUS_EXIT;
-}
-
-int BlindRunner::getAbortStatus()
-{
-	return STATUS_ABORT;
-}
-
-int BlindRunner::getInitialStatus()
-{
-	return STATUS_INITIAL;
+	moveStatus = initialStatus();
 }
 
 void BlindRunner::displayWelcomeMessage()
 {
+	if (!DEBUG)
+		system("cls");
 	std::cout << "You will have to go by touch :(. Let's start\n" << std::endl;
 }
 
-void BlindRunner::move(int & moveStatus)
-{
+void BlindRunner::move()
+{	
 	std::cout << "Press '" << static_cast <char> (CHOICE_MOVE_FORWARD) << "' to move forward, '"
 						   << static_cast <char> (CHOICE_TURN_LEFT) <<"' to turn left, '"
 						   << static_cast <char> (CHOICE_TURN_RIGHT) <<"' to turn right, '"
 						   << static_cast <char> (CHOICE_TO_END) << "' to end the game" 
 						   << std::endl;
 	char choice = _getwch();
-	if (!DEBUG) 
-		system("cls");
-	else std::cout << "Your choice: " << choice << std::endl;
+	
+	// for your choice control
+	if (DEBUG) 
+		std::cout << "Your choice: " << choice << std::endl; 
+	
 	switch (choice)
 	{
 		case CHOICE_TURN_LEFT:
@@ -66,12 +56,47 @@ void BlindRunner::move(int & moveStatus)
 
 	if (!DEBUG) 
 		system("cls");
-	else
+	else //for move status control
 	{
 		std::cout << "The move direction: " << getMoveDirectionName(moveDirection) << std::endl;
-		std::cout << "The move status: " << getStatusName(static_cast<Status>(moveStatus)) << std::endl;
+		std::cout << "The move status: " << getStatusName(moveStatus) << std::endl;
 	}
 }
+
+void BlindRunner::automove()
+{
+	while (moveStatus != STATUS_ENTRANCE && 
+		   moveStatus != STATUS_EXIT && 
+		   moveStatus != STATUS_ERROR)
+	{
+		moveStatus = turnLeft();
+		moveStatus = goForward();
+		while (moveStatus != STATUS_ENTRANCE && 
+			   moveStatus != STATUS_EXIT && 
+			   moveStatus != STATUS_ERROR && 
+			   moveStatus != STATUS_STEP)
+		{
+			moveStatus = turnRight();
+			moveStatus = goForward();
+		}
+		if (DEBUG)
+		{
+			system("cls");
+			std::cout << "You are run by automove\n" << std::endl;
+			p_maze->display(runnerX, runnerY);
+			Sleep(500);
+		}
+	}
+	if (moveStatus == STATUS_ENTRANCE)
+	{
+		throw std::runtime_error("Error! Autorunner is unable to reach exit. It has returned to entrance.");
+	}
+	if (moveStatus == STATUS_ERROR)
+	{
+		throw std::runtime_error("Error! Autorunner is unable to reach exit. A move has got error status.");
+	}
+}
+
 
 int BlindRunner::initialRunnerPositionX()
 {
@@ -97,10 +122,16 @@ BlindRunner::Direction BlindRunner::initialMoveDirection()
 			return DIRECTION_UP;
 }
 
+BlindRunner::Status BlindRunner::initialStatus()
+{
+	return STATUS_INITIAL;
+}
+
 BlindRunner::Status BlindRunner::turnLeft()
 {
 	int hold = moveDirection;
 	hold++;
+	// variable looping
 	if (hold == 4) // if out of enumeration range
 		hold = 0;
 	moveDirection = static_cast<Direction>(hold);
@@ -111,6 +142,7 @@ BlindRunner::Status BlindRunner::turnRight()
 {
 	int hold = moveDirection;
 	hold--;
+	// variable looping
 	if (hold == -1) // if out of enumeration range
 		hold = 3;
 	moveDirection = static_cast<Direction>(hold);
@@ -122,7 +154,8 @@ BlindRunner::Status BlindRunner::goForward()
 	int holdX = runnerX;
 	int holdY = runnerY;
 	
-	switch (moveDirection) // change holders
+	// change holders
+	switch (moveDirection) 
 	{
 	case DIRECTION_UP:
 		holdY--;
@@ -143,27 +176,27 @@ BlindRunner::Status BlindRunner::goForward()
 	}
 	
 	// if a new position is within maze coordinates
-	if (holdX >= 0 && holdY >= 0 && holdX < p_maze->getWidth() && holdY < p_maze->getHight()) 
-		if (p_maze->getCellType(holdX, holdY) == '#') // if a new position is at a wall
+	if (p_maze->isCellWithinMaze(holdX, holdY)) 
+		if (p_maze->isCellAWall(holdX, holdY)) // if a new position is at a wall
 		{
 			return STATUS_WALL; // runner's coordinates remain unchanged
 		}
 		else
 		{
-			if (p_maze->getCellType(holdX, holdY) == '.') // if a new position is at a free space
+			if (p_maze->isCellAFreeSpace(holdX, holdY)) // if a new position is at a free space
 			{
 				runnerX = holdX;
 				runnerY = holdY; // change runner's coordinates
 				// and if the new position is enrance
-				if (runnerX == p_maze->getEntranceX() && runnerY == p_maze->getEntranceY()) 
+				if (p_maze->isCellAnEntrance(runnerX, runnerY)) 
 					return STATUS_ENTRANCE;
 				else  // if the new position is exit
-					if (runnerX == p_maze->getExitX() && runnerY == p_maze->getExitY())
+					if (p_maze->isCellAnExit(runnerX, runnerY))
 						return STATUS_EXIT;
 					else // it is just a one more step
 						return STATUS_STEP;
 			}
-			else // if a maze cell neither '#' nor '.'
+			else // if a maze cell neither wall nor free space
 			{
 				std::cout << "Undefined type of the maze cell: " 
 					      << p_maze->getCellType(holdX, holdY) 
@@ -173,16 +206,19 @@ BlindRunner::Status BlindRunner::goForward()
 		}
 	else // if a new position is out of maze coordinates runner's coordinates remain unchanged
 		// and if an old position is enrance
-		if (runnerX == p_maze->getEntranceX() && runnerY == p_maze->getEntranceY()) 
+		if (p_maze->isCellAnEntrance(runnerX, runnerY))
 			return STATUS_ENTRANCE;
 		else // let a move status be WALL
 			return STATUS_WALL;
 }
 
-void BlindRunner::displayMoveResult(int const & moveResult)
+void BlindRunner::displayMoveResult()
 {
-	switch (moveResult)
+	switch (moveStatus)
 	{
+	case STATUS_INITIAL:
+		displayWelcomeMessage();
+		break;
 	case STATUS_TURNED_LEFT:
 		std::cout << "You turn left\n" << std::endl;
 		break;
@@ -218,34 +254,9 @@ void BlindRunner::displayMoveResult(int const & moveResult)
 	}
 }
 
-void BlindRunner::autorun()
+bool BlindRunner::isNotEnd()
 {
-	int moveStatus = getInitialStatus();
-	while (moveStatus != STATUS_ENTRANCE && moveStatus != STATUS_EXIT && moveStatus != STATUS_ERROR)
-	{
-		moveStatus = turnLeft();
-		moveStatus = goForward();
-		while (moveStatus != STATUS_ENTRANCE && moveStatus != STATUS_EXIT && moveStatus != STATUS_ERROR && moveStatus != STATUS_STEP)
-		{
-			moveStatus = turnRight();
-			moveStatus = goForward();
-		}
-		if (DEBUG)
-		{
-			system("cls");
-			std::cout << "You are run by autorunner\n" << std::endl;
-			p_maze->display(runnerX, runnerY);
-			Sleep(500);
-		}
-	}
-	if (moveStatus == STATUS_ENTRANCE)
-	{
-		throw std::runtime_error("Error! Autorunner isn't able to reach exit. It has returned to entrance.");
-	}
-	if (moveStatus == STATUS_ERROR)
-	{
-		throw std::runtime_error("Error! Autorunner isn't able to reach exit. A move has got error status.");
-	}
+	return (moveStatus != STATUS_ABORT) && (moveStatus != STATUS_EXIT);
 }
 
 std::string BlindRunner::getStatusName(Status inputStatus)

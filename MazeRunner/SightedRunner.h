@@ -6,6 +6,6 @@ class SightedRunner :
 public:
 	SightedRunner(Maze *);
 	void displayWelcomeMessage(); // display message after choosing game mode
-	void displayMoveResult(int const &moveResult);
+	void displayMoveResult();
 };
 
